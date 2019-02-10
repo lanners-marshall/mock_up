@@ -1,5 +1,7 @@
 import React from 'react';
 //import axios from 'axios';
+import firebase from 'firebase';
+import {connect} from 'react-redux';
 
 class Events extends React.Component {
 	constructor(props){
@@ -7,31 +9,27 @@ class Events extends React.Component {
 		this.state = {};
 	}
 
-	componentDidMount(){
+	componentDidMount(){}
 
+	logOut = (event) => {
+		event.preventDefault()
+		firebase.auth().signOut();
+		this.props.history.push("/")
 	}
 
-	// extra in case you need to reference
-
-	// handleChange = event => {
- 	//    this.setState({[event.target.name]: event.target.value})
- 	//  }
-
-	//  <form>
-	// 	<input
-	// 		type="text"
-	// 		placeholder='example'
-	// 		onChange={this.handleChange}
-	// 		name="example"
-	// 		value={this.state.example}
-	// 	/>
-	// </form>
-
 	render() {
+		console.log(this.props)
 		return (
-			<div>Success</div>
+			<div>
+				<div>Success</div>
+				<button onClick={this.logOut}>Sign Out</button>
+			</div>
 		)
 	}
 }
 
-export default Events;
+const mapStateToProps = (state) => {
+	return {auth: state.firebase.auth}
+}
+
+export default connect(mapStateToProps, null)(Events);

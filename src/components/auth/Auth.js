@@ -14,7 +14,6 @@ import './custom.css';
 
 import {signUp} from '../../store/actions/authActions.js';
 import {signIn} from '../../store/actions/authActions.js';
-import firebase from '../../firebase.js';
 import {connect} from 'react-redux';
 
 // import firebase from './firebase.js';
@@ -55,6 +54,7 @@ class Auth extends React.Component {
 		event.preventDefault()
 		let user = {email: this.state.logEmail, password: this.state.logPass}
 		this.props.signIn(user)
+		this.props.history.push("/events")
 	}
 
 	SignUp = (event) => {
@@ -67,15 +67,15 @@ class Auth extends React.Component {
 
 		let user = {username: this.state.SignUpName, email: this.state.SignUpEmail, password: this.state.SignUpPass}
 
-		this.props.signUp(user)
-		this.setState({
-			logEmail: '',
-			logPass: '',
-			SignUpName: '',
-			SignUpPass: '',
-			SignUpConfirm: '',
-			SignUpEmail: '',
-		})
+		/*
+			nice work around to make them be called one at a time
+			this way the not authorized page does not show up for a few seconds
+			before the props has a change to update.
+		*/
+		
+		window.setTimeout (() => { this.props.signUp(user) }, 0);
+    window.setTimeout (() => { this.setState({logEmail: '', logPass: '', SignUpName: '', SignUpPass: '', SignUpConfirm: '', SignUpEmail: '' }) }, 0);
+    window.setTimeout (() => { this.props.history.push("/events") }, 0);
 	}
 
 	handleChange = event => {
@@ -83,22 +83,23 @@ class Auth extends React.Component {
  	}
 
 	render() {
+		//console.log(this.props)
 		return (
 			<div>
 				{this.state.log ? (
-					<div class="limiter">
-						<div class="container-login100 custom">
-							<div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-54">
-								<form class="login100-form validate-form">
-									<span class="login100-form-title p-b-49">
+					<div className="limiter">
+						<div className="container-login100 custom">
+							<div className="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-54">
+								<form className="login100-form validate-form">
+									<span className="login100-form-title p-b-49">
 										Login
 									</span>
 
-									<div class="wrap-input100 validate-input m-b-23" data-validate = "Username is reauired">
-										<span class="label-input100">Username</span>
+									<div className="wrap-input100 validate-input m-b-23" data-validate = "Username is reauired">
+										<span className="label-input100">Username</span>
 
 										<input 
-											class="input100" 
+											className="input100" 
 											type="text" 
 											name="logEmail" 
 											placeholder="Type your email"
@@ -106,14 +107,14 @@ class Auth extends React.Component {
 											onChange={this.handleChange}
 										/>
 
-										<span class="focus-input100" data-symbol="&#xf206;"></span>
+										<span className="focus-input100" data-symbol="&#xf206;"></span>
 									</div>
 
-									<div class="wrap-input100 validate-input" data-validate="Password is required">
-										<span class="label-input100">Password</span>
+									<div className="wrap-input100 validate-input" data-validate="Password is required">
+										<span className="label-input100">Password</span>
 
 										<input 
-											class="input100" 
+											className="input100" 
 											type="password" 
 											name="logPass" 
 											placeholder="Type your password"
@@ -121,50 +122,50 @@ class Auth extends React.Component {
 											onChange={this.handleChange}
 										/>
 
-										<span class="focus-input100" data-symbol="&#xf190;"></span>
+										<span className="focus-input100" data-symbol="&#xf190;"></span>
 									</div>
 									
-									<div class="text-right p-t-8 p-b-31">
+									<div className="text-right p-t-8 p-b-31">
 										<a href="#">
 											Forgot password?
 										</a>
 									</div>
 									
-									<div class="container-login100-form-btn">
-										<div class="wrap-login100-form-btn">
-											<div class="login100-form-bgbtn"></div>
-											<button class="login100-form-btn" onClick={this.SignIn}>
+									<div className="container-login100-form-btn">
+										<div className="wrap-login100-form-btn">
+											<div className="login100-form-bgbtn"></div>
+											<button className="login100-form-btn" onClick={this.SignIn}>
 												Login
 											</button>
 										</div>
 									</div>
 
-									<div class="txt1 text-center p-t-54 p-b-20">
+									<div className="txt1 text-center p-t-54 p-b-20">
 										<span>
 											Or Sign Up Using
 										</span>
 									</div>
 
-									<div class="flex-c-m spacing">
-										<a href="#" class="login100-social-item bg1">
-											<i class="fa fa-facebook"></i>
+									<div className="flex-c-m spacing">
+										<a href="#" className="login100-social-item bg1">
+											<i className="fa fa-facebook"></i>
 										</a>
 
-										<a href="#" class="login100-social-item bg2">
-											<i class="fa fa-twitter"></i>
+										<a href="#" className="login100-social-item bg2">
+											<i className="fa fa-twitter"></i>
 										</a>
 
-										<a href="#" class="login100-social-item bg3">
-											<i class="fa fa-google"></i>
+										<a href="#" className="login100-social-item bg3">
+											<i className="fa fa-google"></i>
 										</a>
 									</div>
 
-									<div class="flex-col-c ">
-										<span class="txt1 p-b-17">
+									<div className="flex-col-c ">
+										<span className="txt1 p-b-17">
 											Or Sign Up Using
 										</span>
 
-										<button class="txt2" onClick={this.swapLog}>
+										<button className="txt2" onClick={this.swapLog}>
 											Sign Up
 										</button>
 									</div>
@@ -176,19 +177,19 @@ class Auth extends React.Component {
 					) : 
 
 
-					<div class="limiter">
-						<div class="container-login100 custom">
-							<div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-54">
-								<form class="login100-form validate-form">
-									<span class="login100-form-title p-b-49">
+					<div className="limiter">
+						<div className="container-login100 custom">
+							<div className="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-54">
+								<form className="login100-form validate-form">
+									<span className="login100-form-title p-b-49">
 										Sign Up
 									</span>
 
-									<div class="wrap-input100 validate-input m-b-23">
-										<span class="label-input100">Username</span>
+									<div className="wrap-input100 validate-input m-b-23">
+										<span className="label-input100">Username</span>
 
 										<input 
-											class="input100" 
+											className="input100" 
 											type="text" 
 											name="SignUpName" 
 											placeholder="Type your username"
@@ -196,15 +197,15 @@ class Auth extends React.Component {
 											onChange={this.handleChange}
 										/>
 
-										<span class="focus-input100" data-symbol="&#xf206;"></span>
+										<span className="focus-input100" data-symbol="&#xf206;"></span>
 									</div>
 
 
-									<div class="wrap-input100 validate-input m-b-23">
-										<span class="label-input100">Email</span>
+									<div className="wrap-input100 validate-input m-b-23">
+										<span className="label-input100">Email</span>
 
 										<input 
-											class="input100" 
+											className="input100" 
 											type="text" 
 											name="SignUpEmail" 
 											placeholder="Type your email"
@@ -212,14 +213,14 @@ class Auth extends React.Component {
 											onChange={this.handleChange}
 										/>
 
-										<span class="focus-input100" data-symbol="&#xf206;"></span>
+										<span className="focus-input100" data-symbol="&#xf206;"></span>
 									</div>
 
-									<div class="wrap-input100 validate-input">
-										<span class="label-input100">Password</span>
+									<div className="wrap-input100 validate-input">
+										<span className="label-input100">Password</span>
 
 										<input 
-											class="input100" 
+											className="input100" 
 											type="password" 
 											name="SignUpPass"
 											placeholder="Type your password"
@@ -227,15 +228,15 @@ class Auth extends React.Component {
 											onChange={this.handleChange}
 										/>
 
-										<span class="focus-input100" data-symbol="&#xf190;"></span>
+										<span className="focus-input100" data-symbol="&#xf190;"></span>
 									</div>
 
 
-									<div class="wrap-input100 validate-input m-b-23 top">
-										<span class="label-input100">Password Confirm</span>
+									<div className="wrap-input100 validate-input m-b-23 top">
+										<span className="label-input100">Password Confirm</span>
 
 										<input 
-											class="input100" 
+											className="input100" 
 											type="password" 
 											name="SignUpConfirm" 
 											placeholder="Confirm your password"
@@ -243,19 +244,19 @@ class Auth extends React.Component {
 											onChange={this.handleChange}
 										/>
 
-										<span class="focus-input100" data-symbol="&#xf206;"></span>
+										<span className="focus-input100" data-symbol="&#xf206;"></span>
 									</div>
 									
-									<div class="container-login100-form-btn">
-										<div class="wrap-login100-form-btn">
-											<div class="login100-form-bgbtn"></div>
-											<button class="login100-form-btn" onClick={this.SignUp}>
+									<div className="container-login100-form-btn">
+										<div className="wrap-login100-form-btn">
+											<div className="login100-form-bgbtn"></div>
+											<button className="login100-form-btn" onClick={this.SignUp}>
 												Sign Up
 											</button>
 										</div>
 									</div>
-									<div class="flex-col-c top">
-										<button class="txt2" onClick={this.swapLog}>
+									<div className="flex-col-c top">
+										<button className="txt2" onClick={this.swapLog}>
 											LogIn
 										</button>
 									</div>

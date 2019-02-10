@@ -12,12 +12,21 @@ import './css/main.css';
 import './css/util.css';
 import './custom.css';
 
+import {signUp} from '../../store/actions/authActions.js';
+import {signIn} from '../../store/actions/authActions.js';
+import firebase from '../../firebase.js';
+import {connect} from 'react-redux';
+
+// import firebase from './firebase.js';
+// import auth from './firebase.js';
+// let provider = new firebase.auth.FacebookAuthProvider();
+
 
 class Auth extends React.Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			logName: '',
+			logEmail: '',
 			logPass: '',
 			SignUpName: '',
 			SignUpPass: '',
@@ -33,7 +42,34 @@ class Auth extends React.Component {
 		event.preventDefault()
 		this.setState({
 			log: !this.state.log,
-			logName: '',
+			logEmail: '',
+			logPass: '',
+			SignUpName: '',
+			SignUpPass: '',
+			SignUpConfirm: '',
+			SignUpEmail: '',
+		})
+	}
+
+	SignIn = (event) => {
+		event.preventDefault()
+		let user = {email: this.state.logEmail, password: this.state.logPass}
+		this.props.signIn(user)
+	}
+
+	SignUp = (event) => {
+		event.preventDefault()
+		// username: user.username, email: user.email
+		if (this.state.SignUpPass !== this.state.SignUpConfirm){
+			alert('password and password confirm does not match')
+			return
+		}
+
+		let user = {username: this.state.SignUpName, email: this.state.SignUpEmail, password: this.state.SignUpPass}
+
+		this.props.signUp(user)
+		this.setState({
+			logEmail: '',
 			logPass: '',
 			SignUpName: '',
 			SignUpPass: '',
@@ -43,8 +79,8 @@ class Auth extends React.Component {
 	}
 
 	handleChange = event => {
- 	   this.setState({[event.target.name]: event.target.value})
- 	 }
+ 	  this.setState({[event.target.name]: event.target.value})
+ 	}
 
 	render() {
 		return (
@@ -64,9 +100,9 @@ class Auth extends React.Component {
 										<input 
 											class="input100" 
 											type="text" 
-											name="logName" 
-											placeholder="Type your username"
-											value={this.state.logName}
+											name="logEmail" 
+											placeholder="Type your email"
+											value={this.state.logEmail}
 											onChange={this.handleChange}
 										/>
 
@@ -97,7 +133,7 @@ class Auth extends React.Component {
 									<div class="container-login100-form-btn">
 										<div class="wrap-login100-form-btn">
 											<div class="login100-form-bgbtn"></div>
-											<button class="login100-form-btn">
+											<button class="login100-form-btn" onClick={this.SignIn}>
 												Login
 											</button>
 										</div>
@@ -200,7 +236,7 @@ class Auth extends React.Component {
 
 										<input 
 											class="input100" 
-											type="text" 
+											type="password" 
 											name="SignUpConfirm" 
 											placeholder="Confirm your password"
 											value={this.state.SignUpConfirm}
@@ -213,7 +249,7 @@ class Auth extends React.Component {
 									<div class="container-login100-form-btn">
 										<div class="wrap-login100-form-btn">
 											<div class="login100-form-bgbtn"></div>
-											<button class="login100-form-btn">
+											<button class="login100-form-btn" onClick={this.SignUp}>
 												Sign Up
 											</button>
 										</div>
@@ -234,4 +270,15 @@ class Auth extends React.Component {
 	}
 }
 
-export default Auth;
+const mapStateToProps = (state) => {
+	return {auth: state.firebase.auth}
+}
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		signUp: (user) => dispatch(signUp(user)),
+		signIn: (user) => dispatch(signIn(user))
+	}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Auth);

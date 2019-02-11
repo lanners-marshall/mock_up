@@ -30,3 +30,13 @@
 .bg4 {
 	background-color: black;
 }
+
+.btnclick {
+	color: #726f6f;
+	font-size: 14px;
+}
+
+.btnclick:hover {
+	cursor: pointer;
+	color: #a64bf4;
+}

@@ -11,9 +11,11 @@ import './vendor/daterangepicker/daterangepicker.css';
 import './css/main.css';
 import './css/util.css';
 import './custom.css';
+import Popup from 'reactjs-popup'
 
-import {signIn, signUp, facebookAuth, twitterAuth, googleAuth, githubAuth} from '../../store/actions/authActions.js';
+import {signIn, signUp, facebookAuth, twitterAuth, googleAuth, githubAuth, passReset} from '../../store/actions/authActions.js';
 import {connect} from 'react-redux';
+import {FormE} from './auth_css.js';
 
 class Auth extends React.Component {
 	constructor(props){
@@ -25,6 +27,7 @@ class Auth extends React.Component {
 			SignUpPass: '',
 			SignUpConfirm: '',
 			SignUpEmail: '',
+			resetEmail: '',
 			log: true,
 		};
 	}
@@ -41,6 +44,15 @@ class Auth extends React.Component {
 			SignUpPass: '',
 			SignUpConfirm: '',
 			SignUpEmail: '',
+		})
+	}
+
+	Reset = () => {
+		let email = this.state.resetEmail
+		this.props.passReset(email)
+		alert('email sent')
+		this.setState({
+			resetEmail: '',
 		})
 	}
 
@@ -138,12 +150,27 @@ class Auth extends React.Component {
 
 										<span className="focus-input100" data-symbol="&#xf190;"></span>
 									</div>
-									
-									<div className="text-right p-t-8 p-b-31">
-										<a href="#">
-											Forgot password?
-										</a>
-									</div>
+
+									<Popup trigger={<div className="text-right p-t-8 p-b-31"><div className="btnclick">Forgot password?</div></div>} modal>
+
+	
+							  		{close => {
+								  		return <FormE>
+								  			<div>
+								  				<div></div>
+									  			<p onClick={close}>X</p>
+								  			</div>
+										  	<input
+										  		type="text"
+										  		name="resetEmail"
+										  		placeholder="Enter Reset Email"
+										  		onChange={this.handleChange}
+										  		value={this.state.resetEmail}
+										  	/>
+										  	<p onClick={() => {this.Reset(); close()}}>send reset</p>
+										  </FormE>
+							  		}}									  
+									</Popup>
 									
 									<div className="container-login100-form-btn">
 										<div className="wrap-login100-form-btn">
@@ -299,7 +326,8 @@ const mapDispatchToProps = (dispatch) => {
 		twitterAuth: () => dispatch(twitterAuth()),
 		facebookAuth: () => dispatch(facebookAuth()),
 		googleAuth: () => dispatch(googleAuth()),
-		githubAuth: () => dispatch(githubAuth())
+		githubAuth: () => dispatch(githubAuth()),
+		passReset: (email) => dispatch(passReset(email))
 	}
 }
 

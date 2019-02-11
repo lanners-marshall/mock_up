@@ -120,3 +120,12 @@ export const githubAuth = () => {
 	}
 }
 
+export const passReset = (email) => {
+	return (dispatch, getState, {getFirebase}) => {
+		const firebase = getFirebase();
+		firebase.auth().sendPasswordResetEmail(email)
+		.then(response => {
+			console.log(response)
+		})
+	}
+}

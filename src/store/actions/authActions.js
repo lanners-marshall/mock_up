@@ -100,7 +100,23 @@ export const googleAuth = () => {
 	}
 }
 
-
-
-
+export const githubAuth = () => {
+	return (dispatch, getState, {getFirebase}) => {
+		const firebase = getFirebase();
+		let provider = new firebase.auth.GithubAuthProvider();
+		firebase.auth().signInWithPopup(provider)
+		.then(response => {
+			console.log(response)
+			let username = response.additionalUserInfo.profile.name
+			let email = response.additionalUserInfo.profile.email
+			let id = response.additionalUserInfo.profile.id
+			return firebase.database().ref(`users/${id}`).set({
+				username: username, email: email
+			})
+		})
+		.then(() => {
+			dispatch({type: "GITHUB_SUCCESS"})
+		})
+	}
+}
 

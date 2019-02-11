@@ -12,7 +12,7 @@ import './css/main.css';
 import './css/util.css';
 import './custom.css';
 
-import {signIn, signUp, facebookAuth, twitterAuth} from '../../store/actions/authActions.js';
+import {signIn, signUp, facebookAuth, twitterAuth, googleAuth} from '../../store/actions/authActions.js';
 import {connect} from 'react-redux';
 
 class Auth extends React.Component {
@@ -42,6 +42,11 @@ class Auth extends React.Component {
 			SignUpConfirm: '',
 			SignUpEmail: '',
 		})
+	}
+
+	Google = () => {
+		this.props.googleAuth()
+		this.props.history.push("/events")
 	}
 
 	Twitter = () => {
@@ -159,7 +164,7 @@ class Auth extends React.Component {
 											<i className="fa fa-twitter"></i>
 										</div>
 
-										<div className="login100-social-item bg3">
+										<div className="login100-social-item bg3" onClick={this.Google}>
 											<i className="fa fa-google"></i>
 										</div>
 									</div>
@@ -285,6 +290,7 @@ const mapDispatchToProps = (dispatch) => {
 		signIn: (user) => dispatch(signIn(user)),
 		twitterAuth: () => dispatch(twitterAuth()),
 		facebookAuth: () => dispatch(facebookAuth()),
+		googleAuth: () => dispatch(googleAuth())
 	}
 }
 

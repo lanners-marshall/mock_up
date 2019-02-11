@@ -63,7 +63,7 @@ export const twitterAuth = () => {
 
 			/*
 				emailed twitter support about it being ok to get email
-				from response waiting on reply, until then will fill in
+				waiting on response, until then will fill in
 				with name@twitter.com
 				instead of 
 				let email = response.additionalUserInfo.profile.email
@@ -79,6 +79,28 @@ export const twitterAuth = () => {
 		})
 	}
 }
+
+export const googleAuth = () => {
+	return (dispatch, getState, {getFirebase}) => {
+		const firebase = getFirebase();
+		let provider = new firebase.auth.GoogleAuthProvider();
+		firebase.auth().signInWithPopup(provider)
+		.then(response => {
+			console.log(response)
+			let username = response.additionalUserInfo.profile.name
+			let email = response.additionalUserInfo.profile.email
+			let id = response.additionalUserInfo.profile.id
+			return firebase.database().ref(`users/${id}`).set({
+				username: username, email: email
+			})
+		})
+		.then(() => {
+			dispatch({type: "GOOGLE_SUCCESS"})
+		})
+	}
+}
+
+
 
 
 

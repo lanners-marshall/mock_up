@@ -15,6 +15,8 @@ const authReducer = (state=initState, action) => {
 			return {...state, authError: null}
 		case "TWITTER_SUCCESS":
 			return {...state, authError: null}
+		case "GOOGLE_SUCCESS":
+			return {...state, authError: null}
 		default: 
 			return state
 	}

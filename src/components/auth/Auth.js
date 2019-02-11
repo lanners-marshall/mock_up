@@ -12,14 +12,8 @@ import './css/main.css';
 import './css/util.css';
 import './custom.css';
 
-import {signUp} from '../../store/actions/authActions.js';
-import {signIn} from '../../store/actions/authActions.js';
+import {signIn, signUp, facebookAuth, twitterAuth} from '../../store/actions/authActions.js';
 import {connect} from 'react-redux';
-
-// import firebase from './firebase.js';
-// import auth from './firebase.js';
-// let provider = new firebase.auth.FacebookAuthProvider();
-
 
 class Auth extends React.Component {
 	constructor(props){
@@ -48,6 +42,16 @@ class Auth extends React.Component {
 			SignUpConfirm: '',
 			SignUpEmail: '',
 		})
+	}
+
+	Twitter = () => {
+		this.props.twitterAuth()
+		this.props.history.push("/events")
+	}
+
+	Facebook = () => {
+		this.props.facebookAuth()
+		this.props.history.push("/events")
 	}
 
 	SignIn = (event) => {
@@ -142,22 +146,22 @@ class Auth extends React.Component {
 
 									<div className="txt1 text-center p-t-54 p-b-20">
 										<span>
-											Or Sign Up Using
+											Or Authenticate Using
 										</span>
 									</div>
 
 									<div className="flex-c-m spacing">
-										<a href="#" className="login100-social-item bg1">
+										<div className="login100-social-item bg1" onClick={this.Facebook}>
 											<i className="fa fa-facebook"></i>
-										</a>
+										</div>
 
-										<a href="#" className="login100-social-item bg2">
+										<div className="login100-social-item bg2" onClick={this.Twitter}>
 											<i className="fa fa-twitter"></i>
-										</a>
+										</div>
 
-										<a href="#" className="login100-social-item bg3">
+										<div className="login100-social-item bg3">
 											<i className="fa fa-google"></i>
-										</a>
+										</div>
 									</div>
 
 									<div className="flex-col-c ">
@@ -278,7 +282,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		signUp: (user) => dispatch(signUp(user)),
-		signIn: (user) => dispatch(signIn(user))
+		signIn: (user) => dispatch(signIn(user)),
+		twitterAuth: () => dispatch(twitterAuth()),
+		facebookAuth: () => dispatch(facebookAuth()),
 	}
 }
 

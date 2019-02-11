@@ -11,6 +11,10 @@ const authReducer = (state=initState, action) => {
 			return {...state, authError: 'Login Failed'}
 		case "SIGNUP_ERROR":
 			return {...state, authError: action.err}
+		case "FACEBOOK_SUCCESS":
+			return {...state, authError: null}
+		case "TWITTER_SUCCESS":
+			return {...state, authError: null}
 		default: 
 			return state
 	}

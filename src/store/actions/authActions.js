@@ -32,3 +32,53 @@ export const signUp = (user) => {
 		})
 	}
 }
+
+export const facebookAuth = () => {
+	return (dispatch, getState, {getFirebase}) => {
+		const firebase = getFirebase();
+		let provider = new firebase.auth.FacebookAuthProvider();
+		firebase.auth().signInWithPopup(provider)
+		.then(response => {
+			let username = response.additionalUserInfo.profile.name
+			let email = response.additionalUserInfo.profile.email
+			let id = response.additionalUserInfo.profile.id
+			console.log(response)
+			return firebase.database().ref(`users/${id}`).set({
+				username: username, email: email
+			})
+		})
+		.then(() => {
+			dispatch({type: "FACEBOOK_SUCCESS"})
+		})
+	}
+}
+
+export const twitterAuth = () => {
+	return (dispatch, getState, {getFirebase}) => {
+		const firebase = getFirebase();
+		let provider = new firebase.auth.TwitterAuthProvider();
+		firebase.auth().signInWithPopup(provider)
+		.then(response => {
+			let username = response.additionalUserInfo.profile.name
+
+			/*
+				emailed twitter support about it being ok to get email
+				from response waiting on reply, until then will fill in
+				with name@twitter.com
+				instead of 
+				let email = response.additionalUserInfo.profile.email
+			*/
+
+			let email = 'name@twitter.com'
+			let id = response.additionalUserInfo.profile.id
+			console.log(response)
+			return firebase.database().ref(`users/${id}`).set({
+				username: username, email: email
+			})
+			dispatch({type: "TWITTER_SUCCESS"})
+		})
+	}
+}
+
+
+
